@@ -1,0 +1,10 @@
+stages:
+  - test
+
+test:
+  stage: test
+  image: albertcolom/ci-pipeline-php:7.1-alpine
+  script:
+    - composer install
+    - vendor/bin/phpcs --standard=PSR2 src
+    - vendor/bin/phpunit

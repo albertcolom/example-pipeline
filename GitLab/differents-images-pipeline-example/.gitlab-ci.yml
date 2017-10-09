@@ -1,0 +1,25 @@
+stages:
+  - test
+  - deploy
+
+test:7.1-alpine:
+  stage: test
+  image: albertcolom/ci-pipeline-php:7.1-alpine
+  script:
+    - composer install
+    - vendor/bin/phpcs --standard=PSR2 src
+    - vendor/bin/phpunit
+
+test:7.0-fpm:
+  stage: test
+  image: albertcolom/ci-pipeline-php:7.0-fpm
+  script:
+    - composer install
+    - vendor/bin/phpcs --standard=PSR2 src
+    - vendor/bin/phpunit
+
+deploy:
+  stage: deploy
+  image: python:3.5.1
+  script:
+    - python deploy-to-production.py
