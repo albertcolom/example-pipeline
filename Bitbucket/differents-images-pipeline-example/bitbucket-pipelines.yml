@@ -1,0 +1,25 @@
+pipelines:
+  default:
+    - step:
+        name: Build and test with alpine php 7.1
+        caches:
+          - composer
+        image: albertcolom/ci-pipeline-php:7.1-alpine
+        script:
+          - composer install
+          - vendor/bin/phpcs --standard=PSR2 src
+          - vendor/bin/phpunit
+    - step:
+        name: Build and test with fpm php 5.6
+        caches:
+          - composer
+        image: albertcolom/ci-pipeline-php:5.6-fpm
+        script:
+          - composer install
+          - vendor/bin/phpcs --standard=PSR2 src
+          - vendor/bin/phpunit
+    - step:
+        name: Deploy to production with Python
+        image: python:3.5.1
+        script:
+          - python deploy-to-production.py

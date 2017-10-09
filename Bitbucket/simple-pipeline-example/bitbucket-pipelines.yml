@@ -1,0 +1,12 @@
+image: albertcolom/ci-pipeline-php:7.1-alpine
+
+pipelines:
+  default:
+    - step:
+        name: Build and test
+        caches:
+          - composer
+        script:
+          - composer install
+          - vendor/bin/phpcs --standard=PSR2 src
+          - vendor/bin/phpunit

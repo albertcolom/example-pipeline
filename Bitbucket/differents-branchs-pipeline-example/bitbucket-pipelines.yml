@@ -1,0 +1,38 @@
+image: albertcolom/ci-pipeline-php:7.1-alpine
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - composer
+        script:
+          - composer install
+          - vendor/bin/phpcs --standard=PSR2 src
+          - vendor/bin/phpunit
+  branches:
+    master:
+      - step:
+          caches:
+            - composer
+          script:
+            - composer install
+            - vendor/bin/phpcs --standard=PSR2 src
+            - vendor/bin/phpunit
+            - rsync -aclvrzp --delete --exclude .git/ -e "ssh -p22" ./ $STAGING_URL
+    production:
+      - step:
+          caches:
+            - composer
+          script:
+            - composer install
+            - vendor/bin/phpcs --standard=PSR2 src
+            - vendor/bin/phpunit
+            - rsync -aclvrzp --delete --exclude .git/ -e "ssh -p22" ./ $PRODUCTION_URL
+    feature/*:
+      - step:
+          caches:
+            - composer
+          script:
+            - composer install
+            - vendor/bin/phpcs --standard=PSR2 src
+            - vendor/bin/phpunit
